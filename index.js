@@ -31,22 +31,20 @@ let notes = [
 app.get('/',(req,res)=>{
     res.send('<h1>FFFFF</h1>')
 })
-app.get('/api/notes',(req,res)=>{
-    res.json(notes)
-})
-// app.get('/api/notes/:id', (request, response) => {
-//     const id = Number(request.params.id)
-//     console.log(id)
-//     const note = notes.find(note => note.id === id)
-//     if(note){
-//         console.log(note)
-//         response.json(note)
-//     }
-//     else{
-//         response.status(404).end()
-//     }
+
+app.get('/api/notes/:id', (request, response) => {
+    const id = Number(request.params.id)
+    console.log(id)
+    const note = notes.find(note => note.id === id)
+    if(note){
+        console.log(note)
+        response.json(note)
+    }
+    else{
+        response.status(404).end()
+    }
    
-//   })
+  })
 app.delete('/api/notes/:id',(req,res)=>{
    
     const id = Number(req.params.id)
@@ -79,7 +77,9 @@ app.post('/api/notes',(req,res)=>{
   console.log(note)
   res.json(note)
 })
-
+app.get('/api/notes',(req,res)=>{
+  res.json(notes)
+})
 const PORT =3001
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
