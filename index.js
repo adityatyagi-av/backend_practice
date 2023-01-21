@@ -4,10 +4,22 @@ const { response } = require('express')
 const express =require('express')
 const cors=require('cors')
 const Note = require('./models/note')
-
 const app=express();
+
+
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+}
+
+app.use(express.json())
+app.use(requestLogger)
 app.use(cors())
 
+app.use(express.static('build'))
 
 app.get('/',(req,res)=>{
     res.send('<h1>FFFFF</h1>')
@@ -50,6 +62,6 @@ app.get('/api/notes',(req,res)=>{
   })
   
 })
-const PORT =3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
