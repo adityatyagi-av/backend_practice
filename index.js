@@ -3,30 +3,64 @@ const { response } = require('express')
 const express =require('express')
 const cors=require('cors')
 
+//mongoose setup
+
+const mongoose = require('mongoose')
+
+if (process.argv.length<3) {
+  console.log('give password as argument')
+  process.exit(1)
+}
+
+const password = process.argv[2]
+
+const url =
+  `mongodb+srv://adityatyagiav:${password}@database.fcoo0cd.mongodb.net/?retryWrites=true&w=majority`
+mongoose.set('strictQuery',false)
+mongoose.connect(url)
+
+const noteSchema = new mongoose.Schema({
+  content: String,
+  important: Boolean,
+})
+
+const Note = mongoose.model('Note', noteSchema)
+
+
+noteSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+})
+
+//..............
+
 const app=express();
 app.use(cors())
 
 
-let notes = [
-    {
-      id: 1,
-      content: "HTML is easy",
-      date: "2022-05-30T17:30:31.098Z",
-      important: true
-    },
-    {
-      id: 2,
-      content: "Browser can execute only Javascript",
-      date: "2022-05-30T18:39:34.091Z",
-      important: false
-    },
-    {
-      id: 3,
-      content: "GET and POST are the most important methods of HTTP protocol",
-      date: "2022-05-30T19:20:14.298Z",
-      important: true
-    }
-]  
+// let notes = [
+//     {
+//       id: 1,
+//       content: "HTML is easy",
+//       date: "2022-05-30T17:30:31.098Z",
+//       important: true
+//     },
+//     {
+//       id: 2,
+//       content: "Browser can execute only Javascript",
+//       date: "2022-05-30T18:39:34.091Z",
+//       important: false
+//     },
+//     {
+//       id: 3,
+//       content: "GET and POST are the most important methods of HTTP protocol",
+//       date: "2022-05-30T19:20:14.298Z",
+//       important: true
+//     }
+// ]  
 
 // const app = http.createServer((request,response)=>{
 //     response.writeHead(200,{'Content-Type':'text/plain'})
@@ -83,7 +117,10 @@ app.post('/api/notes',(req,res)=>{
   res.json(note)
 })
 app.get('/api/notes',(req,res)=>{
-  res.json(notes)
+  Note.find({}).then(notes=>{
+    res.json(notes)
+  })
+  
 })
 const PORT =3001
 app.listen(PORT)
