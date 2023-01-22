@@ -4,10 +4,10 @@ GET http://localhost:3001/api/notes
 DELETE http://localhost:3001/api/notes/1
 
 ###
-POST http://localhost:3001/api/notes/
+POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
     "content": "do not forget to set the right content type",
-    "important":true
-    }
+    "important": true,
+}
