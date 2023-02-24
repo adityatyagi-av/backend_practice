@@ -1,7 +1,9 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-require('dotenv').config()
+const config = require('./utils/config')
+
+logger.info(`Server running on port ${config.PORT}`)
 const Note = require('./models/note')
 
 const requestLogger = (request, response, next) => {
